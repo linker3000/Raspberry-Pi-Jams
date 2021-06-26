@@ -1,5 +1,6 @@
 #!/bin/python3
 from sense_hat import *
+from time import sleep
 
 sense = SenseHat()
 sense.clear()
@@ -22,13 +23,22 @@ def wait_for_move():
     e = sense.stick.wait_for_event()
     if e.action != ACTION_RELEASED:
       return e
-      
+
+def check_map(x, y):
+  pos = x + (y * 8)
+  if map[pos] == 1:
+    return True
+  else:
+    return False
+    
 x = 0
 y = 0
 sense.set_pixel(x, y, YELLOW)
-
+started = False
 while True:
   e = wait_for_move()
+  if e.direction == DIRECTION_MIDDLE:
+    started = True
   
   if e.direction == DIRECTION_UP and y >0:
     y = y - 1
@@ -42,5 +52,18 @@ while True:
   elif e.direction == DIRECTION_RIGHT and x < 7:
     x = x + 1
   
-  sense.clear()
-  sense.set_pixel(x, y, YELLOW)
+  if started == False:
+    x = 0
+    sense.clear()
+    sense.set_pixel(x, y, YELLOW)
+  else:
+    if check_map(x, y) == True:
+      sense.set_pixel(x, y, WHITE)
+    else:
+      sense.set_pixel(x, y, RED)
+      sleep(1)
+      sense.show_message('Kaboom!', scroll_speed = 0.05)
+      started = False
+      x = 0
+      y = 0
+      sense.set_pixel(x, y, YELLOW)
