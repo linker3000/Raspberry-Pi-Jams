@@ -59,6 +59,9 @@ while True:
   else:
     if check_map(x, y) == True:
       sense.set_pixel(x, y, WHITE)
+      if x == 7:
+        sense.show_message('Safe!')
+        break;
     else:
       sense.set_pixel(x, y, RED)
       sleep(1)
