@@ -1,0 +1,46 @@
+#!/bin/python3
+from sense_hat import *
+
+sense = SenseHat()
+sense.clear()
+
+map = [0,0,0,0,0,0,0,0,
+      1,1,1,1,0,0,0,0,
+      0,0,0,1,1,1,1,1,
+      0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0]
+
+RED = [255, 0, 0]
+YELLOW = [255,255,0]
+WHITE = [255,255,255]
+
+def wait_for_move():
+  while True:
+    e = sense.stick.wait_for_event()
+    if e.action != ACTION_RELEASED:
+      return e
+      
+x = 0
+y = 0
+sense.set_pixel(x, y, YELLOW)
+
+while True:
+  e = wait_for_move()
+  
+  if e.direction == DIRECTION_UP and y >0:
+    y = y - 1
+    
+  elif e.direction == DIRECTION_DOWN and y < 7:
+    y = y + 1
+    
+  elif e.direction == DIRECTION_LEFT and x > 0:
+    x = x - 1
+    
+  elif e.direction == DIRECTION_RIGHT and x < 7:
+    x = x + 1
+  
+  sense.clear()
+  sense.set_pixel(x, y, YELLOW)
